@@ -1,6 +1,6 @@
 // --- 1. CONFIGURAZIONE SERVER ---
 // INSERISCI QUI IL TUO NUOVO LINK DI GOOGLE APPS SCRIPT
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxGeyXVYJwf_zbNRKjMTrtcKGEo15xrsVRW5os8e5XIyllCYbZMHQJoBvg5QdhAyIXeBg/exec"; 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzRgjHEQeAwDloJ8CTXTitBsOnXNgUi8BKFlLOShx59GS3fANr-Z3gEU_L3SF9iMuymvw/exec/exec"; 
 
 let filamentDB = [];
 let backers = [];
