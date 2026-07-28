@@ -1,34 +1,26 @@
-// --- 1. CONFIGURAZIONE SERVER ---
-// INSERISCI QUI IL TUO NUOVO LINK DI GOOGLE APPS SCRIPT
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRgjHEQeAwDloJ8CTXTitBsOnXNgUi8BKFlLOShx59GS3fANr-Z3gEU_L3SF9iMuymvw/exec"; 
+// --- CONFIGURAZIONE SERVER ---
+// Sostituisci questo link con il NUOVO URL del tuo Google Apps Script (dopo aver fatto il Nuovo Deployment)
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/INSERISCI_QUI_IL_TUO_URL/exec"; 
 
 let filamentDB = [];
-let backers = [];
 
-// L'app si avvia istantaneamente (no login)
 window.onload = function() {
+    if(!sessionStorage.getItem('welcome_seen')) {
+        document.getElementById('welcome-popup').style.display = 'flex';
+    } else {
+        document.getElementById('welcome-popup').style.display = 'none';
+    }
     initApp();
 };
 
+function closePopup() {
+    sessionStorage.setItem('welcome_seen', 'true');
+    document.getElementById('welcome-popup').style.opacity = '0';
+    setTimeout(() => { document.getElementById('welcome-popup').style.display = 'none'; }, 400);
+}
+
 // --- INIZIALIZZAZIONE DELL'APP ---
 async function initApp() {
-    const savedKey = localStorage.getItem('gemini_api_key');
-    if(savedKey) document.getElementById('gemini-key').value = savedKey;
-
-    // 1. CARICA I NOMI PER L'ANIMAZIONE 
-    try {
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow',
-            body: JSON.stringify({ action: "getSupporters" })
-        });
-        const result = await response.json();
-        if(result.success && result.data.all_names.length > 0) {
-            backers = result.data.all_names;
-            initBackerAnimation();
-        }
-    } catch(e) { console.log("Errore caricamento nomi animazione."); }
-
-    // 2. SCARICA IL DATABASE DEI MATERIALI
     try {
         const response = await fetch(APPS_SCRIPT_URL, {
             method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, redirect: 'follow',
@@ -38,11 +30,9 @@ async function initApp() {
         if(result.success && result.db) { filamentDB = result.db; }
     } catch (e) { console.error("Cloud DB Error:", e); }
 
-    // 3. CARICA LE AFFILIAZIONI / ADS
     loadAds();
 }
 
-// --- NUOVA FUNZIONE: CARICA ADS DAL FOGLIO GOOGLE ---
 async function loadAds() {
     try {
         const response = await fetch(APPS_SCRIPT_URL, {
@@ -63,29 +53,6 @@ async function loadAds() {
             `).join('');
         }
     } catch(e) { console.error("Error loading ads:", e); }
-}
-
-function saveApiKey() {
-    localStorage.setItem('gemini_api_key', document.getElementById('gemini-key').value);
-    alert("API Key Saved!");
-}
-
-function initBackerAnimation() {
-    if(backers.length === 0) return;
-    const bgContainer = document.getElementById('backers-bg');
-    const backerElements = [];
-    for(let i=0; i<35; i++) {
-        const el = document.createElement('div');
-        el.className = 'backer'; el.innerText = backers[Math.floor(Math.random() * backers.length)];
-        el.style.left = Math.random() * 95 + 'vw';
-        el.style.animationDuration = (20 + Math.random() * 30) + 's'; el.style.animationDelay = '-' + (Math.random() * 40) + 's';
-        bgContainer.appendChild(el); backerElements.push(el);
-    }
-    setInterval(() => {
-        const randomEl = backerElements[Math.floor(Math.random() * backerElements.length)];
-        randomEl.classList.add('highlight');
-        setTimeout(() => randomEl.classList.remove('highlight'), 3000);
-    }, 1500);
 }
 
 function toggleField(selectId, divId) { document.getElementById(divId).style.display = document.getElementById(selectId).value === 'Yes' ? 'block' : 'none'; }
@@ -134,8 +101,8 @@ function generateOfflineFallback(manualData, isMethodA) {
     return { color_hex: color, settings: settings, texture: texture, odor: odor, loading_type: loadType, recipe_pct: r };
 }
 
+// --- FUNZIONE GENERAZIONE RAG (Retrieval-Augmented Generation) ---
 async function generateRecipe(method) {
-    const apiKey = localStorage.getItem('gemini_api_key');
     const targetMass = parseFloat(document.getElementById('target-mass').value) || 1000;
     const targetUnit = document.getElementById('target-unit').value;
     
@@ -153,37 +120,46 @@ async function generateRecipe(method) {
     if(method === 'A' && !projectDesc) return alert("Please describe your project in Method A.");
 
     document.getElementById('result-box').classList.add('active');
-    document.getElementById('res-settings').innerText = "Calculating recipe formulation...";
+    document.getElementById('res-settings').innerText = "Analyzing Cloud Database & Generating AI recipe...";
     document.getElementById('res-recipe-grid').innerHTML = '';
     document.getElementById('res-loading-type').innerText = '';
 
     let resultJSON;
-    let modeText = "";
+    let modeText = `AI Engine (Method ${method})`;
 
-    if(!apiKey) {
-        modeText = `Offline Mode (Method ${method})`;
-        resultJSON = generateOfflineFallback(manualData, method === 'A');
-        await new Promise(r => setTimeout(r, 600)); 
-    } else {
-        modeText = `AI Mode (Method ${method})`;
-        let basePrompt = method === 'A' 
-            ? `User project description: "${projectDesc}". Recommend the best material characteristics and the ideal virgin polymer base.` 
-            : `User wants a filament with Color: ${manualData.color}, Texture: ${manualData.texture} (Type: ${manualData.textureDesc}), Odor: ${manualData.odor} (Type: ${manualData.odorDesc}), Resistance: ${manualData.res}/10, Flexibility: ${manualData.flex}/10. Choose the most appropriate polymer base (PLA, PETG, TPU, ABS).`;
-            
-        const prompt = `You are a materials engineer for 3D printing. ${basePrompt}
-        Calculate the percentage mixture. Must sum to 100.
-        Output ONLY valid JSON: {"color_hex":"#hex", "settings":"...", "texture":"...", "odor":"...", "loading_type":"specify comma separated types or none", "recipe_pct":{"waste_pct":0, "mb_yellow":0, "mb_blue":0, "mb_red":0, "virgin_pct":0, "virgin_type":"PLA/PETG/TPU/ABS/ASA", "loading_pct":0}}`;
+    let basePrompt = method === 'A' 
+        ? `User project description: "${projectDesc}". Recommend the best material characteristics and the ideal virgin polymer base.` 
+        : `User wants a filament with Color: ${manualData.color}, Texture: ${manualData.texture} (Type: ${manualData.textureDesc}), Odor: ${manualData.odor} (Type: ${manualData.odorDesc}), Resistance: ${manualData.res}/10, Flexibility: ${manualData.flex}/10. Choose the most appropriate polymer base (PLA, PETG, TPU, ABS, ASA).`;
         
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { response_mime_type: "application/json" } })
-            });
-            resultJSON = JSON.parse((await response.json()).candidates[0].content.parts[0].text);
-        } catch (error) {
-            modeText = `Offline Fallback (Method ${method})`;
-            resultJSON = generateOfflineFallback(manualData, method === 'A');
+    const finalPrompt = `You are a specialized materials engineer for 3D printing and polymer extrusion. 
+    ${basePrompt}
+    
+    INSTRUCTIONS:
+    1. Calculate the exact percentage mixture (waste, masterbatches, virgin polymer, loadings).
+    2. The total sum of percentages MUST be exactly 100.
+    3. You will receive an EMPIRICAL DATABASE below. You MUST use those past successful recipes as a reference. If a similar material goal exists in the database, prioritize mimicking its ratios.
+    
+    Output ONLY a valid JSON object with this exact structure, without markdown formatting:
+    {"color_hex":"#hex", "settings":"...", "texture":"...", "odor":"...", "loading_type":"specify comma separated types or none", "recipe_pct":{"waste_pct":0, "mb_yellow":0, "mb_blue":0, "mb_red":0, "virgin_pct":0, "virgin_type":"PLA/PETG/TPU/ABS/ASA", "loading_pct":0}}`;
+    
+    try {
+        const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: "generateRecipe", prompt: finalPrompt })
+        });
+        
+        const serverResult = await response.json();
+        
+        if (serverResult.success) {
+            resultJSON = serverResult.data;
+        } else {
+            console.error("Server API Error:", serverResult.error);
+            throw new Error("Server or Gemini error");
         }
+    } catch (error) {
+        console.error("AI Generation failed, using offline fallback.", error);
+        modeText = `Offline Fallback (Method ${method})`;
+        resultJSON = generateOfflineFallback(manualData, method === 'A');
     }
 
     document.getElementById('res-mode').innerText = modeText;
