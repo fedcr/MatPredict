@@ -13,23 +13,29 @@
     <div id="bg-grid"></div>
     <div id="bg-orb-1"></div>
     <div id="bg-orb-2"></div>
-    <div id="backers-bg"></div>
+
+    <div id="welcome-popup" class="popup-overlay">
+        <div class="popup-card">
+            <div class="popup-icon">👋</div>
+            <div class="login-badge">OPEN BETA</div>
+            <h2>Welcome to MatPredict</h2>
+            <p>This is a completely free, community-driven tool designed to stop plastic waste in 3D printing.</p>
+            <p><strong>Right now, our AI prediction database is empty.</strong></p>
+            <p>To make the algorithm accurate, we need your help. Every time you successfully extrude a custom filament, please use the <em>Laboratory</em> section below to log your recipe. Your data will directly train the engine and help makers worldwide.</p>
+            <button class="btn btn-glow" onclick="closePopup()">I Understand, Let's Get Started!</button>
+        </div>
+    </div>
 
     <nav class="topnav">
         <div class="topnav-inner">
             <div class="topnav-logo"><span class="topnav-hex">⬡</span><span>MatPredict</span></div>
             <div class="topnav-center"><span class="topnav-status"><span class="status-dot"></span>System Online</span></div>
-            <div class="topnav-right">
-                <a href="supporters.html" class="btn btn-xs btn-outline" style="text-decoration:none; margin-right: 12px;">Wall of Fame</a>
-                <input type="password" id="gemini-key" placeholder="Gemini API Key (optional)">
-                <button class="btn btn-xs btn-ghost" onclick="saveApiKey()">Save</button>
-            </div>
         </div>
     </nav>
 
     <main class="app-container">
         <section class="hero">
-            <div class="hero-eyebrow"><span class="eyebrow-tag">FREE PUBLIC BUILD</span><span class="eyebrow-line"></span><span class="eyebrow-tag eyebrow-tag--dim">v2.1.0</span></div>
+            <div class="hero-eyebrow"><span class="eyebrow-tag">FREE PUBLIC BUILD</span><span class="eyebrow-line"></span><span class="eyebrow-tag eyebrow-tag--dim">v3.0.0</span></div>
             <h1 class="hero-title">Material<br>Predictor</h1>
             <p class="hero-subtitle">Polymer Alloy Calculator — AI-Powered Formulation Engine</p>
             <div class="hero-rule"></div>
@@ -189,7 +195,7 @@
             <span class="footer-copy">Free Open Tool for the Maker Community. Powered by AI.</span>
             <div class="footer-actions">
                 <a href="mailto:tuamail@esempio.com?subject=Feedback MatPredict" class="footer-link">Give Feedback</a>
-                <span class="footer-build">Build 2.1</span>
+                <span class="footer-build">Build 3.0</span>
             </div>
         </div>
     </footer>
