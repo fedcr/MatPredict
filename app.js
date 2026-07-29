@@ -1,6 +1,6 @@
 // --- CONFIGURAZIONE SERVER ---
 // Sostituisci questo link con il NUOVO URL del tuo Google Apps Script (dopo aver fatto il Nuovo Deployment)
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycby-XX7vNVOo9pcHL6cWRCBreekhdw5L2d_8w8cOSwqptORVsVFJjcp26i1GQsoUQaQmiA/exec"; 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-XX7vNVOo9pcHL6cWRCBreekhdw5L2d_8w8cOSwqptORVsVFJjcp26i1GQsoUQaQmiA/exec"; 
 
 let filamentDB = [];
 
