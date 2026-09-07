@@ -10,9 +10,8 @@ An open-source, free tool that helps you calculate the exact mixture of plastic 
 
 ## How to use
 1. Open the website: https://fedcr.github.io/MatPredict/
-2. (Optional) Save your own Gemini API Key in the settings for AI-powered suggestions.
-3. Configure your target mass and material goals.
-4. Calculate and start extruding!
+2. Configure your target mass and material goals.
+3. Calculate and start extruding!
 
 ## Community & Database
 This project relies on the community to grow. Feel free to contribute data and share your results!
