@@ -1,22 +1,22 @@
 /* MatPredict - shares the OpenCaddie design language:
-   warm paper, forest sidebar, white hairline cards, pill controls, one deep-green hero.
-   Amber is the secondary colour (extrusion heat). */
+   cool paper, navy sidebar, white hairline cards, pill controls, one deep-blue hero.
+   Palette: blue, azure, grey, white. */
 
 :root {
-    --paper: #f6f5f1;
-    --cream: #efeee8;
-    --hairline: #e6e4dc;
-    --tint: #ddf6e7;
-    --leaf: #4cd88e;
-    --sea: #187a4a;
-    --forest: #0a4529;
-    --ink: #0f1a14;
-    --ink-2: rgba(15, 26, 20, 0.68);
-    --ink-3: rgba(15, 26, 20, 0.58);
+    --paper: #f3f6fa;
+    --cream: #e8edf3;
+    --hairline: #dbe2ea;
+    --tint: #dcecff;
+    --leaf: #4fb3ff;
+    --sea: #1d5fd6;
+    --forest: #0b2a5b;
+    --ink: #0e1726;
+    --ink-2: rgba(14, 23, 38, 0.68);
+    --ink-3: rgba(14, 23, 38, 0.58);
     --coral: #c2402a;
-    --amber: #e08a1e;
-    --amber-ink: #9a4f06;
-    --amber-tint: #fbefdc;
+    --amber: #8a94a3;
+    --amber-ink: #465163;
+    --amber-tint: #e8edf3;
     --font: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
@@ -60,7 +60,7 @@ main { max-width: 1400px; margin: 0 auto; padding: max(16px, env(safe-area-inset
 .seg { display: inline-flex; max-width: 100%; gap: 4px; padding: 4px; margin-bottom: 18px; background: var(--cream); border-radius: 999px; overflow-x: auto; }
 .seg button { font: inherit; font-size: 13px; font-weight: 700; white-space: nowrap; padding: 7px 14px; border: none; border-radius: 999px; background: none; color: var(--ink-3); cursor: pointer; }
 .seg button:hover { color: var(--ink); }
-.seg button[aria-selected=true] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(15, 26, 20, 0.1); }
+.seg button[aria-selected=true] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(14, 23, 38, 0.1); }
 
 .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .field > span, .field > label { font-size: 13px; font-weight: 700; }
@@ -84,11 +84,11 @@ output { font-variant-numeric: tabular-nums; font-weight: 800; }
 .btn-primary:hover:not(:disabled) { background: var(--forest); }
 .btn-primary:disabled { opacity: 0.6; cursor: progress; }
 .btn-quiet { background: #fff; color: var(--ink); border-color: var(--hairline); }
-.btn-quiet:hover { border-color: rgba(24, 122, 74, 0.45); }
+.btn-quiet:hover { border-color: rgba(29, 95, 214, 0.45); }
 .btn-small { padding: 6px 14px; min-height: 34px; font-size: 13px; }
 
 /* Hero */
-.hero { position: relative; overflow: hidden; border-radius: 26px; padding: 26px; color: #fff; min-height: 380px; background: radial-gradient(120% 130% at 78% 38%, #14734a 0%, #0a4529 55%, #062e1b 100%); }
+.hero { position: relative; overflow: hidden; border-radius: 26px; padding: 26px; color: #fff; min-height: 380px; background: radial-gradient(120% 130% at 78% 38%, #2a6ee0 0%, #0b2a5b 55%, #061a3a 100%); }
 .hero-kicker { font-size: 14px; font-weight: 700; color: rgba(255, 255, 255, 0.8); }
 .hero-sub { margin-top: 10px; font-size: 14px; color: rgba(255, 255, 255, 0.75); }
 .hero-big { font-size: clamp(64px, 11vw, 112px); line-height: 0.95; font-weight: 800; letter-spacing: -0.045em; margin: 4px 0 12px; font-variant-numeric: tabular-nums; }
@@ -161,7 +161,7 @@ table.recipe .empty-row td { text-align: left; color: var(--ink-3); padding-left
 
 /* Bottom nav (mobile) */
 .bottom-nav { position: fixed; inset: auto 0 0 0; padding: 0 12px max(12px, env(safe-area-inset-bottom)); z-index: 40; }
-.bottom-nav-inner { display: flex; gap: 4px; padding: 6px; background: var(--forest); border-radius: 999px; box-shadow: 0 8px 24px rgba(10, 69, 41, 0.35); }
+.bottom-nav-inner { display: flex; gap: 4px; padding: 6px; background: var(--forest); border-radius: 999px; box-shadow: 0 8px 24px rgba(11, 42, 91, 0.35); }
 .bottom-nav .nav-item { flex: 1; flex-direction: column; gap: 2px; padding: 7px 8px; font-size: 10.5px; font-weight: 700; border-radius: 999px; align-items: center; text-align: center; }
 
 @media (min-width: 640px) {

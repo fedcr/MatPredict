@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="MatPredict">
-  <path fill="#0a4529" d="M114 8.82V247.18A120 120 0 0 1 8 128A120 120 0 0 1 114 8.82Z"/>
-  <path fill="#187a4a" d="M128 8V248A120 120 0 0 0 192 229.51V26.49A120 120 0 0 0 128 8Z"/>
-  <path fill="#e08a1e" d="M206 36.81V219.19A120 120 0 0 0 248 128A120 120 0 0 0 206 36.81Z"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="MatPredict"><path d="M111.68 35.43A94 94 0 0 1 221.09 114.92" fill="none" stroke="#1d5fd6" stroke-width="26"/><path fill="#1d5fd6" d="M246.83 111.3L217.4 157.05L195.34 118.54Z"/><path d="M216.33 160.15A94 94 0 0 1 92.79 215.16" fill="none" stroke="#4fb3ff" stroke-width="26"/><path fill="#4fb3ff" d="M83.05 239.26L58.14 190.9L102.53 191.05Z"/><path d="M55.99 188.42A94 94 0 0 1 70.13 53.93" fill="none" stroke="#8a94a3" stroke-width="26"/><path fill="#8a94a3" d="M54.12 33.44L108.46 36.05L86.14 74.42Z"/><circle cx="128" cy="128" r="40" fill="none" stroke="#0b2a5b" stroke-width="18"/><circle cx="128" cy="128" r="12" fill="#0b2a5b"/></svg>

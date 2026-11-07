@@ -41,7 +41,7 @@ const COLOR_WORDS = {
     green: "#2e8b57", verde: "#2e8b57", yellow: "#e8b800", giallo: "#e8b800",
     orange: "#e67e22", arancio: "#e67e22", purple: "#7b3fa0", viola: "#7b3fa0",
     grey: "#808080", gray: "#808080", grigio: "#808080", brown: "#6b4423", marrone: "#6b4423",
-    pink: "#e58fb0", rosa: "#e58fb0", chestnut: "#8b5a2b", castagn: "#8b5a2b"
+    pink: "#e58fb0", rosa: "#e58fb0", chestnut: "#52617a", castagn: "#8b5a2b"
 };
 
 // Published measurements used as a starting point. Colour is unknown for them
@@ -536,12 +536,12 @@ Output ONLY a valid JSON object with this exact structure, without markdown form
 // Prediction flow + rendering
 // ---------------------------------------------------------------------------
 const COMPONENTS = [
-    { key: "waste", label: "Recycled waste", color: "#8a8f98" },
+    { key: "waste", label: "Recycled waste", color: "#8a94a3" },
     { key: "yellow", label: "Yellow masterbatch", color: "#e8b800" },
     { key: "blue", label: "Blue masterbatch", color: "#2f6fd6" },
     { key: "red", label: "Red masterbatch", color: "#d23b3b" },
-    { key: "virgin", label: "Virgin pellet", color: "#d9d5c9" },
-    { key: "loading", label: "Filler", color: "#8b5a2b" }
+    { key: "virgin", label: "Virgin pellet", color: "#d3dae4" },
+    { key: "loading", label: "Filler", color: "#52617a" }
 ];
 
 async function generateRecipe(method) {
