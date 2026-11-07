@@ -151,7 +151,9 @@ legend { padding-right: 12px; font-size: 1rem; }
 /* Footer */
 .site-footer { border-top: 1px solid var(--line-strong); }
 .footer-inner { max-width: 1120px; margin: 0 auto; padding: 24px; display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; font-size: 0.9rem; color: var(--ink-2); }
-.footer-brand { font-weight: 700; color: var(--ink); }
+.footer-brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--ink); }
+.partner-logo { width: 96px; height: 96px; margin: -20px 0; object-fit: contain; }
+.footer-inner { align-items: center; }
 
 @media (max-width: 860px) {
     .workbench, .section-head, .lab-grid { grid-template-columns: 1fr; gap: 28px; }

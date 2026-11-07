@@ -48,7 +48,7 @@ const COLOR_WORDS = {
 // (empty), so the matcher ignores colour for these records.
 // Sources are listed in data/SOURCES.md.
 const REFERENCE_DB = [
-    lit("Lit: neat PLA printed (49.99 MPa), Forests 2023", "", "No Texture", 49.99, 100, "PLA", 0, "none"),
+    lit("Lit: neat PLA printed (49.99 MPa), Forests 2023", "", "No Odor", 49.99, 100, "PLA", 0, "none"),
     lit("Lit: PLA + 3% coffee grounds (51.28 MPa), Forests 2023", "Matte/Rough", "No Odor", 51.28, 97, "PLA", 3, "Spent coffee grounds"),
     lit("Lit: PLA + 7% coffee grounds (26.45 MPa), Forests 2023", "Matte/Rough", "No Odor", 26.45, 93, "PLA", 7, "Spent coffee grounds"),
     lit("Lit: PLA + 20% wood powder (36.7 MPa), vendor datasheet", "Wood/Fibrous", "No Odor", 36.7, 80, "PLA", 20, "Wood powder"),
@@ -175,7 +175,18 @@ async function loadAds() {
 // ---------------------------------------------------------------------------
 // Knowledge base normalisation
 // ---------------------------------------------------------------------------
-const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
+// The shared sheet has its percentage columns formatted as dates, so Apps Script returns
+// numbers as ISO timestamps (serial day 0 = 1899-12-30 00:00 in the sheet's UTC+1 zone).
+// Decode them back; fractions survive as time of day.
+const SHEET_EPOCH_MS = Date.UTC(1899, 11, 29, 23);
+const num = (v) => {
+    if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}T/.test(v)) {
+        const days = (Date.parse(v) - SHEET_EPOCH_MS) / 86400000;
+        return Number.isFinite(days) ? Math.round(days * 100) / 100 : 0;
+    }
+    const n = parseFloat(v);
+    return Number.isFinite(n) ? n : 0;
+};
 const bool = (v) => v === true || String(v).toLowerCase() === "true";
 
 // Tensile pull -> 1..10 score. Force units are converted with a 1.75 mm filament
@@ -204,7 +215,7 @@ function normalizeRecord(r) {
         name: String(r.name || ""),
         color: /^#[0-9a-f]{6}$/i.test(String(r.colorHex)) ? String(r.colorHex).toLowerCase() : null,
         texture: bool(r.hasTexture) ? String(r.descTexture || "") : "",
-        odor: bool(r.hasOdor) ? String(r.descOdor || "") : "",
+        odor: bool(r.hasOdor) && !/^no /i.test(String(r.descOdor)) ? String(r.descOdor || "") : "",
         res: resScore(num(r.resRaw), r.resUnit),
         flex: flexScore(num(r.flexRaw), r.flexUnit),
         pct, base, loadingType: String(r.loadingType || "none")
@@ -218,8 +229,9 @@ function allRawRows() {
 
 function rebuildKnowledge() {
     knowledge = allRawRows().map(normalizeRecord).filter(Boolean);
-    const community = cloudDB.length;
-    $("db-status").textContent = `${knowledge.length} records in the prediction database (${community} logged by makers, ${knowledge.length - Math.min(community, knowledge.length)} from published studies)`;
+    const community = cloudDB.filter((r) => !String(r.name).startsWith("Lit:")).length;
+    const studies = knowledge.filter((r) => r.name.startsWith("Lit:")).length;
+    $("db-status").textContent = `${knowledge.length} records in the prediction database (${community} logged by makers, ${studies} from published studies)`;
     const note = $("notice-count");
     if (note) note.textContent = String(community);
 }
