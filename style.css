@@ -158,7 +158,7 @@ table.recipe .empty-row td { text-align: left; color: var(--ink-3); padding-left
 .site-footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--hairline); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; font-size: 13px; color: var(--ink-2); }
 .footer-brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: var(--ink); }
 /* Recoloured with the page blue via a mask, so the source SVG stays untouched. */
-.partner-logo { display: block; width: 96px; height: 96px; margin: -22px 0; background: var(--sea); -webkit-mask: url(assets/logo-everythink.svg) center / contain no-repeat; mask: url(assets/logo-everythink.svg) center / contain no-repeat; }
+.partner-logo { display: block; width: 96px; height: 96px; margin: -22px 0; background: var(--sea); -webkit-mask: url(assets/logo-everythink.png) center / contain no-repeat; mask: url(assets/logo-everythink.svg) center / contain no-repeat; }
 
 /* Bottom nav (mobile) */
 .bottom-nav { position: fixed; inset: auto 0 0 0; padding: 0 12px max(12px, env(safe-area-inset-bottom)); z-index: 40; }
