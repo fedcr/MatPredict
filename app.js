@@ -96,19 +96,47 @@ function bindUI() {
      ["add-texture", "texture-fields"], ["add-odor", "odor-fields"], ["mix-has-loading", "loading-fields"]]
         .forEach(([sel, box]) => $(sel).addEventListener("change", () => toggleField(sel, box)));
     $("add-img-texture").addEventListener("change", previewImage);
-    $("notice-close").addEventListener("click", closeNotice);
-    try { if (sessionStorage.getItem("notice_seen")) $("notice").hidden = true; } catch (e) { /* storage blocked */ }
+    document.querySelectorAll("[data-view]").forEach((btn) => btn.addEventListener("click", () => setView(btn.dataset.view)));
+    $("btn-log").addEventListener("click", prefillLab);
+    const fromHash = location.hash.replace("#", "");
+    if (VIEW_TITLES[fromHash]) setView(fromHash);
+}
+
+const VIEW_TITLES = { predict: "Predict", lab: "Laboratory", gear: "Recommended gear" };
+function setView(view) {
+    if (!VIEW_TITLES[view]) return;
+    Object.keys(VIEW_TITLES).forEach((v) => { $("view-" + v).hidden = v !== view; });
+    document.querySelectorAll("[data-view]").forEach((b) => {
+        if (b.dataset.view === view) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+    $("page-title").textContent = VIEW_TITLES[view];
+    history.replaceState(null, "", "#" + view);
+    window.scrollTo({ top: 0 });
+}
+
+// Copy the last computed recipe into the Laboratory form so a real batch can be logged quickly.
+function prefillLab() {
+    if (!lastResult) return;
+    const targetMass = num($("target-mass").value) || 1000;
+    const p = lastResult.fin.pct;
+    const mass = (k) => +((p[k] / 100) * targetMass).toFixed(1);
+    $("mix-global-unit").value = $("target-unit").value;
+    $("mix-waste").value = mass("waste"); $("mix-yellow").value = mass("yellow");
+    $("mix-blue").value = mass("blue"); $("mix-red").value = mass("red");
+    $("mix-virgin").value = mass("virgin"); $("mix-virgin-type").value = lastResult.base;
+    $("add-color").value = lastResult.color;
+    if (p.loading > 0) {
+        $("mix-has-loading").value = "Yes"; toggleField("mix-has-loading", "loading-fields");
+        document.querySelector(".loading-mass").value = mass("loading");
+        document.querySelector(".loading-type").value = lastResult.loadingLabel;
+    }
+    setView("lab");
 }
 
 function setMode(mode) {
     document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.mode === mode)));
     $("panel-describe").hidden = mode !== "describe";
     $("panel-configure").hidden = mode !== "configure";
-}
-
-function closeNotice() {
-    $("notice").hidden = true;
-    try { sessionStorage.setItem("notice_seen", "1"); } catch (e) { /* storage blocked */ }
 }
 
 // ---------------------------------------------------------------------------
@@ -555,6 +583,32 @@ function mergeWithAI(local, ai, q) {
     };
 }
 
+// Filament cross-section: a circle sliced into vertical bands proportional to the recipe.
+function renderSection(parts, mb) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 240 240");
+    const defs = document.createElementNS(NS, "defs");
+    const clip = document.createElementNS(NS, "clipPath"); clip.id = "section-clip";
+    const circle = document.createElementNS(NS, "circle");
+    circle.setAttribute("cx", 120); circle.setAttribute("cy", 120); circle.setAttribute("r", 116);
+    clip.appendChild(circle); defs.appendChild(clip); svg.appendChild(defs);
+    const g = document.createElementNS(NS, "g"); g.setAttribute("clip-path", "url(#section-clip)");
+    const order = ["virgin", "waste", "yellow", "blue", "red", "loading"];
+    const total = order.reduce((a, k) => a + parts[k], 0) || 1;
+    let x = 4;
+    order.forEach((k) => {
+        if (!parts[k]) return;
+        const w = (parts[k] / total) * 232;
+        const rect = document.createElementNS(NS, "rect");
+        rect.setAttribute("x", x.toFixed(2)); rect.setAttribute("y", 0); rect.setAttribute("width", Math.max(w - 2, 0.5).toFixed(2)); rect.setAttribute("height", 240);
+        rect.setAttribute("fill", COMPONENTS.find((c) => c.key === k).color);
+        g.appendChild(rect); x += w;
+    });
+    svg.appendChild(g);
+    $("res-section").replaceChildren(svg);
+}
+
 function setStatus(text) { $("res-status").textContent = text; }
 
 function renderResult(local, ai, targetMass, targetUnit, busyText, q) {
@@ -565,7 +619,7 @@ function renderResult(local, ai, targetMass, targetUnit, busyText, q) {
 
     const mode = busyText || (ai ? "Local model + AI refinement" : "Local model only (AI unavailable)");
     $("res-mode").textContent = mode;
-    $("res-title").textContent = `${res.base} base`;
+    $("res-title").textContent = res.base;
     $("res-color-target").style.background = res.color;
     $("res-color-achieved").style.background = res.fin.mb.achievedHex;
     const off = res.fin.mb.error > 0.12;
@@ -574,6 +628,13 @@ function renderResult(local, ai, targetMass, targetUnit, busyText, q) {
         : "Left: target colour. Right: expected colour from the masterbatch mix.";
 
     const parts = res.fin.pct;
+    renderSection(parts, res.fin.mb);
+    const mbTotal = parts.yellow + parts.blue + parts.red;
+    const stat = (value, label, warm) => `<div class="stat"><strong>${value.toFixed(1)}%</strong><div class="meter"><i${warm ? ' class="warm"' : ""} style="width:${clamp(value, 2, 100)}%"></i></div><span>${label}</span></div>`;
+    $("hero-stats").innerHTML = stat(parts.virgin, "Virgin " + esc(res.base)) + stat(parts.waste, "Recycled waste", true) + stat(mbTotal, "Masterbatch") + stat(parts.loading, "Filler");
+    $("btn-log").hidden = !!busyText;
+    if (!busyText && window.matchMedia("(max-width: 1023px)").matches) $("hero").scrollIntoView({ behavior: "smooth", block: "start" });
+
     const bar = $("res-bar");
     bar.replaceChildren();
     COMPONENTS.forEach((c) => {

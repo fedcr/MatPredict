@@ -2,50 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#f6f5f1">
     <title>MatPredict - The AI Engine for Custom 3D Filament</title>
     <meta name="description" content="Free polymer alloy calculator: work out the mix of plastic waste, virgin pellets and masterbatch for custom 3D printing filament.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <a class="skip-link" href="#predict">Skip to calculator</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></symbol>
+        <symbol id="i-clip" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6"/><path d="M9 16h6"/></symbol>
+        <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></symbol>
+        <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    </defs>
+</svg>
+<a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="topbar">
-        <div class="topbar-inner">
-            <a class="wordmark" href="#top"><img src="assets/logo-mark.svg" alt="" width="26" height="26">MatPredict</a>
-            <nav aria-label="Sections">
-                <a href="#predict">Predict</a>
-                <a href="#laboratory">Laboratory</a>
-                <a href="#gear">Gear</a>
-            </nav>
+<aside class="sidebar">
+    <div class="brand"><img src="assets/logo-mark.svg" alt="" width="36" height="36"><span>MatPredict</span></div>
+    <nav aria-label="Sections">
+        <button type="button" class="nav-item" data-view="predict" aria-current="page"><svg class="ico"><use href="#i-flask"/></svg>Predict</button>
+        <button type="button" class="nav-item" data-view="lab"><svg class="ico"><use href="#i-clip"/></svg>Laboratory</button>
+        <button type="button" class="nav-item" data-view="gear"><svg class="ico"><use href="#i-bag"/></svg>Gear</button>
+    </nav>
+    <p class="side-note">Free, open tool for the maker community. Powered by AI.</p>
+</aside>
+
+<main id="main">
+    <header class="page-head">
+        <h1 id="page-title">Predict</h1>
+        <div class="batch-pill">
+            <label for="target-mass">Batch</label>
+            <input type="number" id="target-mass" value="1000" min="1" inputmode="decimal">
+            <select id="target-unit" aria-label="Batch unit"><option value="g">g</option><option value="kg">kg</option><option value="oz">oz</option></select>
         </div>
     </header>
 
-    <main id="top">
-        <section class="intro">
-            <h1>Turn plastic scrap into filament you can predict.</h1>
-            <p class="lede">Set a colour, stiffness and finish. MatPredict returns the split between recycled waste, virgin pellet, masterbatch and filler, by weight, for the batch size you choose.</p>
-            <div class="batch">
-                <label for="target-mass">Batch size</label>
-                <div class="inline-input">
-                    <input type="number" id="target-mass" value="1000" min="1" inputmode="decimal">
-                    <select id="target-unit" aria-label="Batch unit"><option value="g">g</option><option value="kg">kg</option><option value="oz">oz</option></select>
-                </div>
-            </div>
-            <div class="notice" id="notice">
-                <p><strong>Predictions get better with your data.</strong> After each successful extrusion, log the recipe in the <a href="#laboratory">Laboratory</a>. <span id="db-status">Loading database…</span></p>
-                <button type="button" class="btn btn-quiet btn-small" id="notice-close">Dismiss</button>
-            </div>
-        </section>
-
-        <section class="workbench" id="predict" aria-labelledby="predict-h">
-            <div class="workbench-form">
-                <h2 id="predict-h">Design a filament</h2>
-                <div class="tabs" role="tablist" aria-label="Input method">
+    <!-- ============ PREDICT ============ -->
+    <section id="view-predict" class="view">
+        <p class="data-chip" id="db-status">Loading database…</p>
+        <div class="grid">
+            <div class="card span-5">
+                <h2 class="card-title">Design a filament</h2>
+                <div class="seg" role="tablist" aria-label="Input method">
                     <button type="button" role="tab" data-mode="describe" aria-selected="true" aria-controls="panel-describe">Describe the part</button>
                     <button type="button" role="tab" data-mode="configure" aria-selected="false" aria-controls="panel-configure">Set parameters</button>
                 </div>
@@ -53,16 +57,14 @@
                 <div id="panel-describe" role="tabpanel">
                     <label class="field" for="ai-prompt">
                         <span>What will you print?</span>
-                        <textarea id="ai-prompt" rows="7" placeholder="e.g. A flexible, durable outdoor gear part that looks like dark stone"></textarea>
+                        <textarea id="ai-prompt" rows="6" placeholder="e.g. A flexible, durable outdoor gear part that looks like dark stone"></textarea>
                     </label>
                     <p class="hint">Colour names, polymers (PLA, PETG, TPU, ABS, ASA) and fillers (wood, carbon, coffee, stone) in your text are read directly.</p>
-                    <button type="button" class="btn btn-primary" id="btn-generate-a">Calculate recipe</button>
+                    <button type="button" class="btn btn-primary" id="btn-generate-a"><svg class="ico"><use href="#i-target"/></svg>Calculate recipe</button>
                 </div>
 
                 <div id="panel-configure" role="tabpanel" hidden>
-                    <div class="row">
-                        <label class="field" for="calc-color"><span>Target colour</span><input type="color" id="calc-color" value="#0b57d0"></label>
-                    </div>
+                    <label class="field" for="calc-color"><span>Target colour</span><input type="color" id="calc-color" value="#0b57d0"></label>
                     <div class="row two">
                         <label class="field" for="calc-texture"><span>Special texture</span><select id="calc-texture"><option value="No">None</option><option value="Yes">Yes</option></select></label>
                         <label class="field" id="calc-texture-desc-container" hidden for="calc-texture-desc"><span>Texture type</span><select id="calc-texture-desc"><option value="Wood/Fibrous">Wood / Fibrous</option><option value="Marble/Stone">Marble / Stone</option><option value="Matte/Rough">Matte / Rough</option><option value="Porous/Foam">Porous / Foam</option><option value="Glossy/Shiny">Glossy / Shiny</option></select></label>
@@ -71,117 +73,130 @@
                         <label class="field" for="calc-odor"><span>Specific odor</span><select id="calc-odor"><option value="No">None</option><option value="Yes">Yes</option></select></label>
                         <label class="field" id="calc-odor-desc-container" hidden for="calc-odor-desc"><span>Odor type</span><select id="calc-odor-desc"><option value="Toasted/Coffee">Toasted / Coffee</option><option value="Woody/Pine">Woody / Pine</option><option value="Sweet/Caramel">Sweet / Caramel</option><option value="Earthy/Natural">Earthy / Natural</option><option value="Chemical/Industrial">Chemical / Industrial</option></select></label>
                     </div>
-                    <label class="field" for="calc-res"><span>Resistance <output id="lbl-res" class="num">7</output> / 10</span><input type="range" id="calc-res" min="1" max="10" value="7"></label>
-                    <label class="field" for="calc-flex"><span>Flexibility <output id="lbl-flex" class="num">4</output> / 10</span><input type="range" id="calc-flex" min="1" max="10" value="4"></label>
-                    <button type="button" class="btn btn-primary" id="btn-generate-b">Calculate recipe</button>
+                    <label class="field" for="calc-res"><span>Resistance <output id="lbl-res">7</output> / 10</span><input type="range" id="calc-res" min="1" max="10" value="7"></label>
+                    <label class="field" for="calc-flex"><span>Flexibility <output id="lbl-flex">4</output> / 10</span><input type="range" id="calc-flex" min="1" max="10" value="4"></label>
+                    <button type="button" class="btn btn-primary" id="btn-generate-b"><svg class="ico"><use href="#i-target"/></svg>Calculate recipe</button>
                 </div>
             </div>
 
-            <div class="result" aria-live="polite">
+            <section class="hero span-7" id="hero" aria-live="polite" aria-label="Recipe result">
                 <p class="status" id="res-status"></p>
-                <div id="result-empty" class="result-empty">
-                    <h2>Recipe</h2>
-                    <p>Your mixture appears here: percentages, masses for your batch, print settings and how much data backs the estimate.</p>
+                <div id="result-empty" class="hero-empty">
+                    <p class="hero-kicker">Your recipe</p>
+                    <p class="hero-big dim">—</p>
+                    <p class="hero-text">Describe a part or set parameters. The mixture appears here: shares by weight, masses for your batch and a cross-section of the filament.</p>
                 </div>
                 <div id="result-body" hidden>
-                    <div class="result-head">
+                    <p class="hero-kicker" id="res-mode"></p>
+                    <div class="hero-main">
                         <div>
-                            <h2 id="res-title">Recipe</h2>
-                            <p class="mode" id="res-mode"></p>
+                            <p class="hero-sub">Recommended base polymer</p>
+                            <h2 class="hero-big" id="res-title">PLA</h2>
+                            <div class="swatch-pair" aria-hidden="true"><span id="res-color-target"></span><span id="res-color-achieved"></span></div>
+                            <p class="hero-text" id="res-color-note"></p>
                         </div>
-                        <div class="swatches" aria-hidden="true"><span id="res-color-target"></span><span id="res-color-achieved"></span></div>
+                        <div class="section-wrap"><div id="res-section" role="img" aria-label="Filament cross-section by composition"></div></div>
                     </div>
-                    <p class="hint" id="res-color-note"></p>
-                    <div class="bar" id="res-bar" role="img" aria-label="Composition by weight"></div>
-                    <table class="recipe">
-                        <thead><tr><th scope="col">Component</th><th scope="col">Share</th><th scope="col">Mass</th></tr></thead>
-                        <tbody id="res-table-body"></tbody>
-                    </table>
-                    <dl class="facts">
-                        <div><dt>Print settings</dt><dd id="res-settings"></dd></div>
-                        <div><dt>Texture</dt><dd id="res-texture-pred"></dd></div>
-                        <div><dt>Odor</dt><dd id="res-odor-pred"></dd></div>
-                        <div><dt>Evidence</dt><dd id="res-confidence"></dd></div>
-                    </dl>
+                    <div class="hero-stats" id="hero-stats"></div>
+                </div>
+            </section>
+
+            <div class="card span-7" id="mix-card">
+                <h2 class="card-title">Mixture for your batch</h2>
+                <div class="bar" id="res-bar" role="img" aria-label="Composition by weight"></div>
+                <table class="recipe">
+                    <thead><tr><th scope="col">Component</th><th scope="col">Share</th><th scope="col">Mass</th></tr></thead>
+                    <tbody id="res-table-body"><tr class="empty-row"><td colspan="3">Calculate a recipe to see the mixture.</td></tr></tbody>
+                </table>
+                <button type="button" class="btn btn-quiet" id="btn-log" hidden>Log this batch in the Laboratory</button>
+            </div>
+
+            <div class="card span-5">
+                <h2 class="card-title">Before you extrude</h2>
+                <ol class="steps">
+                    <li><span class="step-n">1</span><div><h3>Print settings</h3><p id="res-settings">Appears after you calculate a recipe.</p></div></li>
+                    <li><span class="step-n">2</span><div><h3>Texture and odor</h3><p><span id="res-texture-pred">—</span> · <span id="res-odor-pred">—</span></p></div></li>
+                    <li><span class="step-n">3</span><div><h3>How sure is this?</h3><p id="res-confidence">The estimate improves with every batch logged in the Laboratory.</p></div></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ LABORATORY ============ -->
+    <section id="view-lab" class="view" hidden>
+        <p class="lede">Record a batch you actually extruded. Percentages are computed from the masses you enter and saved to the shared database.</p>
+        <div class="grid">
+            <div class="card span-6">
+                <h2 class="card-title">Measured properties</h2>
+                <label class="field" for="add-color"><span>Colour detected</span><input type="color" id="add-color" value="#ffffff"></label>
+                <label class="field" for="add-texture"><span>Has texture?</span><select id="add-texture"><option value="No">No</option><option value="Yes">Yes</option></select></label>
+                <div id="texture-fields" hidden>
+                    <label class="field" for="add-desc-texture"><span>Texture classification</span><select id="add-desc-texture"><option value="Wood/Fibrous">Wood / Fibrous</option><option value="Marble/Stone">Marble / Stone</option><option value="Matte/Rough">Matte / Rough</option><option value="Porous/Foam">Porous / Foam</option><option value="Glossy/Shiny">Glossy / Shiny</option></select></label>
+                    <label class="field" for="add-img-texture"><span>Photo <small>optional</small></span><input type="file" id="add-img-texture" accept="image/*"></label>
+                    <div class="texture-preview-container" id="texture-preview-container" hidden><img id="texture-preview" src="" alt="Texture preview"></div>
+                </div>
+                <label class="field" for="add-odor"><span>Has odor?</span><select id="add-odor"><option value="No">No</option><option value="Yes">Yes</option></select></label>
+                <div id="odor-fields" hidden>
+                    <label class="field" for="add-obj-odor"><span>Odor classification</span><select id="add-obj-odor"><option value="Toasted/Coffee">Toasted / Coffee</option><option value="Woody/Pine">Woody / Pine</option><option value="Sweet/Caramel">Sweet / Caramel</option><option value="Earthy/Natural">Earthy / Natural</option><option value="Chemical/Industrial">Chemical / Industrial</option></select></label>
+                </div>
+                <div class="row two">
+                    <div class="field"><label for="add-res">Resistance</label><div class="inline-input"><input type="number" id="add-res" min="0"><select id="add-res-unit" aria-label="Resistance unit"><option value="kg">kg</option><option value="N">N</option><option value="MPa">MPa</option></select></div></div>
+                    <div class="field"><label for="add-flex">Flexibility</label><div class="inline-input"><input type="number" id="add-flex" min="0"><select id="add-flex-unit" aria-label="Flexibility unit"><option value="deg">deg</option><option value="mm">mm</option></select></div></div>
                 </div>
             </div>
-        </section>
 
-        <section class="lab" id="laboratory" aria-labelledby="lab-h">
-            <div class="section-head">
-                <h2 id="lab-h">Laboratory</h2>
-                <p>Record a batch you actually extruded. Percentages are computed from the masses you enter and saved to the shared database.</p>
-            </div>
-
-            <div class="lab-grid">
-                <fieldset>
-                    <legend>Measured properties</legend>
-                    <label class="field" for="add-color"><span>Colour detected</span><input type="color" id="add-color" value="#ffffff"></label>
-                    <label class="field" for="add-texture"><span>Has texture?</span><select id="add-texture"><option value="No">No</option><option value="Yes">Yes</option></select></label>
-                    <div id="texture-fields" hidden>
-                        <label class="field" for="add-desc-texture"><span>Texture classification</span><select id="add-desc-texture"><option value="Wood/Fibrous">Wood / Fibrous</option><option value="Marble/Stone">Marble / Stone</option><option value="Matte/Rough">Matte / Rough</option><option value="Porous/Foam">Porous / Foam</option><option value="Glossy/Shiny">Glossy / Shiny</option></select></label>
-                        <label class="field" for="add-img-texture"><span>Photo <small>optional</small></span><input type="file" id="add-img-texture" accept="image/*"></label>
-                        <div class="texture-preview-container" id="texture-preview-container" hidden><img id="texture-preview" src="" alt="Texture preview"></div>
-                    </div>
-                    <label class="field" for="add-odor"><span>Has odor?</span><select id="add-odor"><option value="No">No</option><option value="Yes">Yes</option></select></label>
-                    <div id="odor-fields" hidden>
-                        <label class="field" for="add-obj-odor"><span>Odor classification</span><select id="add-obj-odor"><option value="Toasted/Coffee">Toasted / Coffee</option><option value="Woody/Pine">Woody / Pine</option><option value="Sweet/Caramel">Sweet / Caramel</option><option value="Earthy/Natural">Earthy / Natural</option><option value="Chemical/Industrial">Chemical / Industrial</option></select></label>
-                    </div>
-                    <div class="row two">
-                        <div class="field"><label for="add-res">Resistance</label><div class="inline-input"><input type="number" id="add-res" min="0"><select id="add-res-unit" aria-label="Resistance unit"><option value="kg">kg</option><option value="N">N</option><option value="MPa">MPa</option></select></div></div>
-                        <div class="field"><label for="add-flex">Flexibility</label><div class="inline-input"><input type="number" id="add-flex" min="0"><select id="add-flex-unit" aria-label="Flexibility unit"><option value="deg">deg</option><option value="mm">mm</option></select></div></div>
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Mixture</legend>
-                    <label class="field" for="mix-global-unit"><span>Unit for the masses below</span><select id="mix-global-unit"><option value="g">Grams (g)</option><option value="kg">Kilograms (kg)</option><option value="oz">Ounces (oz)</option></select></label>
-                    <div class="mix-grid">
-                        <label class="field" for="mix-waste"><span>Waste</span><input type="number" id="mix-waste" value="0" min="0"></label>
-                        <label class="field" for="mix-yellow"><span>Yellow MB</span><input type="number" id="mix-yellow" value="0" min="0"></label>
-                        <label class="field" for="mix-blue"><span>Blue MB</span><input type="number" id="mix-blue" value="0" min="0"></label>
-                        <label class="field" for="mix-red"><span>Red MB</span><input type="number" id="mix-red" value="0" min="0"></label>
-                    </div>
-                    <div class="field"><label for="mix-virgin">Virgin pellet</label>
-                        <div class="inline-input"><input type="number" id="mix-virgin" value="100" min="0"><select id="mix-virgin-type" aria-label="Polymer"><option value="PLA">PLA</option><option value="PETG">PETG</option><option value="TPU">TPU</option><option value="ABS">ABS</option><option value="ASA">ASA</option></select></div>
-                    </div>
-                    <label class="field" for="mix-has-loading"><span>Fillers?</span><select id="mix-has-loading"><option value="No">No</option><option value="Yes">Yes</option></select></label>
-                    <div id="loading-fields" hidden>
-                        <div id="dynamic-loadings-container">
-                            <div class="loading-row">
-                                <label class="field"><span>Mass</span><input type="number" class="loading-mass" min="0" value="0"></label>
-                                <label class="field grow"><span>Material type</span><input type="text" class="loading-type" placeholder="e.g. Carbon fiber"></label>
-                            </div>
+            <div class="card span-6">
+                <h2 class="card-title">Mixture</h2>
+                <label class="field" for="mix-global-unit"><span>Unit for the masses below</span><select id="mix-global-unit"><option value="g">Grams (g)</option><option value="kg">Kilograms (kg)</option><option value="oz">Ounces (oz)</option></select></label>
+                <div class="mix-grid">
+                    <label class="field" for="mix-waste"><span>Waste</span><input type="number" id="mix-waste" value="0" min="0"></label>
+                    <label class="field" for="mix-yellow"><span>Yellow MB</span><input type="number" id="mix-yellow" value="0" min="0"></label>
+                    <label class="field" for="mix-blue"><span>Blue MB</span><input type="number" id="mix-blue" value="0" min="0"></label>
+                    <label class="field" for="mix-red"><span>Red MB</span><input type="number" id="mix-red" value="0" min="0"></label>
+                </div>
+                <div class="field"><label for="mix-virgin">Virgin pellet</label>
+                    <div class="inline-input"><input type="number" id="mix-virgin" value="100" min="0"><select id="mix-virgin-type" aria-label="Polymer"><option value="PLA">PLA</option><option value="PETG">PETG</option><option value="TPU">TPU</option><option value="ABS">ABS</option><option value="ASA">ASA</option></select></div>
+                </div>
+                <label class="field" for="mix-has-loading"><span>Fillers?</span><select id="mix-has-loading"><option value="No">No</option><option value="Yes">Yes</option></select></label>
+                <div id="loading-fields" hidden>
+                    <div id="dynamic-loadings-container">
+                        <div class="loading-row">
+                            <label class="field"><span>Mass</span><input type="number" class="loading-mass" min="0" value="0"></label>
+                            <label class="field grow"><span>Material type</span><input type="text" class="loading-type" placeholder="e.g. Carbon fiber"></label>
                         </div>
-                        <button type="button" class="btn btn-quiet btn-small" id="btn-add-loading">Add filler</button>
                     </div>
-                    <div class="actions">
-                        <button type="button" class="btn btn-primary" id="btn-save-db">Compute percentages and save</button>
-                        <button type="button" class="btn btn-quiet" id="btn-export">Export CSV</button>
-                    </div>
-                    <p id="save-status" role="status"></p>
-                </fieldset>
+                    <button type="button" class="btn btn-quiet btn-small" id="btn-add-loading">Add filler</button>
+                </div>
+                <div class="actions">
+                    <button type="button" class="btn btn-primary" id="btn-save-db">Compute percentages and save</button>
+                    <button type="button" class="btn btn-quiet" id="btn-export">Export CSV</button>
+                </div>
+                <p id="save-status" role="status"></p>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="gear" id="gear" aria-labelledby="gear-h">
-            <div class="section-head">
-                <h2 id="gear-h">Recommended gear</h2>
-                <p>Extruders and materials we use. Affiliate links support the project.</p>
-            </div>
-            <div id="ads-container" class="ads-grid"></div>
-        </section>
-    </main>
+    <!-- ============ GEAR ============ -->
+    <section id="view-gear" class="view" hidden>
+        <p class="lede">Extruders and materials we use. Affiliate links support the project.</p>
+        <div id="ads-container" class="ads-grid"></div>
+    </section>
 
     <footer class="site-footer">
-        <div class="footer-inner">
-            <span class="footer-brand"><img src="assets/logo-mark.svg" alt="" width="20" height="20">MatPredict</span>
-            <img class="partner-logo" src="assets/logo-everythink.svg" alt="Everythink" width="96" height="96">
-            <span>Free open tool for the maker community. Powered by AI.</span>
-            <span><a href="mailto:tuamail@esempio.com?subject=Feedback MatPredict">Give feedback</a> · Build 3.0</span>
-        </div>
+        <span class="footer-brand"><img src="assets/logo-mark.svg" alt="" width="20" height="20">MatPredict</span>
+        <img class="partner-logo" src="assets/logo-everythink.svg" alt="Everythink" width="96" height="96">
+        <span><a href="mailto:tuamail@esempio.com?subject=Feedback MatPredict">Give feedback</a> · Build 3.0</span>
     </footer>
+</main>
 
-    <script src="app.js"></script>
+<nav class="bottom-nav" aria-label="Sections">
+    <div class="bottom-nav-inner">
+        <button type="button" class="nav-item" data-view="predict" aria-current="page"><svg class="ico"><use href="#i-flask"/></svg>Predict</button>
+        <button type="button" class="nav-item" data-view="lab"><svg class="ico"><use href="#i-clip"/></svg>Laboratory</button>
+        <button type="button" class="nav-item" data-view="gear"><svg class="ico"><use href="#i-bag"/></svg>Gear</button>
+    </div>
+</nav>
+
+<script src="app.js"></script>
 </body>
 </html>
