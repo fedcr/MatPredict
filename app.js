@@ -41,7 +41,7 @@ const COLOR_WORDS = {
     green: "#2e8b57", verde: "#2e8b57", yellow: "#e8b800", giallo: "#e8b800",
     orange: "#e67e22", arancio: "#e67e22", purple: "#7b3fa0", viola: "#7b3fa0",
     grey: "#808080", gray: "#808080", grigio: "#808080", brown: "#6b4423", marrone: "#6b4423",
-    pink: "#e58fb0", rosa: "#e58fb0", chestnut: "#52617a", castagn: "#8b5a2b"
+    pink: "#e58fb0", rosa: "#e58fb0", chestnut: "#8b5a2b", castagn: "#8b5a2b"
 };
 
 // Published measurements used as a starting point. Colour is unknown for them
